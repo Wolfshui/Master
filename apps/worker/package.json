@@ -1,0 +1,20 @@
+
+{
+  "name": "@community-os/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "wrangler deploy --dry-run",
+    "test": "vitest run src/__tests__",
+    "lint": "eslint src --config ../../.eslintrc.cjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@community-os/core-types": "workspace:*",
+    "@community-os/module-knowledge-base": "workspace:*",
+    "@community-os/module-sdk": "workspace:*",
+    "hono": "4.7.5"
+  }
+}

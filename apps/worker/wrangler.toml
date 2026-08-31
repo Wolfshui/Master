@@ -1,0 +1,26 @@
+
+name = "community-platform-os-worker"
+main = "src/index.ts"
+compatibility_date = "2026-08-31"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "community_platform_os"
+database_id = "local-community-platform-os"
+
+[[r2_buckets]]
+binding = "MODULE_ASSETS"
+bucket_name = "community-platform-os-assets"
+
+[[kv_namespaces]]
+binding = "PLATFORM_CACHE"
+id = "community-platform-os-cache"
+
+[[queues.producers]]
+binding = "EVENT_QUEUE"
+queue = "community-platform-os-events"
+
+[[queues.consumers]]
+queue = "community-platform-os-events"
+max_batch_size = 10
+max_batch_timeout = 5
