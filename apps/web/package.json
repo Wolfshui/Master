@@ -1,0 +1,23 @@
+
+{
+  "name": "@community-os/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint src --config ../../.eslintrc.cjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-router-dom": "7.6.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "5.0.0",
+    "tailwindcss": "4.1.8",
+    "vite": "7.0.4"
+  }
+}
