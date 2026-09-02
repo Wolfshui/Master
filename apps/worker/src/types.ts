@@ -28,15 +28,9 @@ export interface KVNamespace {
   delete(key: string): Promise<void>;
 }
 
-export interface QueueBinding<TMessage> {
-  send(message: TMessage): Promise<void>;
-  sendBatch(messages: readonly TMessage[]): Promise<void>;
-}
-
 export interface EnvBindings {
   DB: D1Database;
   PLATFORM_CACHE: KVNamespace;
-  EVENT_QUEUE: QueueBinding<Record<string, unknown>>;
   INSTALLATION_ID?: string;
   SESSION_COOKIE_NAME?: string;
 }
