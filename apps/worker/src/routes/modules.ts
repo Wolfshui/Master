@@ -90,7 +90,7 @@ moduleRoutes.post('/install', requireOwner, async (c) => {
     idempotencyKey: `${manifest.id}:${manifest.version}`,
     loopGuard: ['worker.modules'],
     dataClassification: 'internal',
-    ...(auth ? { actor: { type: 'user' as const, id: auth.user.id } } : {}),
+    ...(auth ? { actor: { id: auth.user.id } } : {}),
     payload: { moduleId: manifest.id, version: manifest.version },
   });
 

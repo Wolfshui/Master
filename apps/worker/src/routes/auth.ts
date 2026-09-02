@@ -89,7 +89,7 @@ authRoutes.post('/login', async (c) => {
     category: 'auth',
     action: 'session.login',
     targetType: 'session',
-    targetId: auth.session.id,
+    targetId: auth.sessionId,
     outcome: 'success',
     message: 'Session created.',
     metadata: { email: auth.user.email },
@@ -101,15 +101,15 @@ authRoutes.post('/login', async (c) => {
     version: 1,
     installationId: auth.user.installationId,
     source: 'worker.auth',
-    subject: `session:${auth.session.id}`,
+    subject: `session:${auth.sessionId}`,
     occurredAt: new Date().toISOString(),
     traceId: crypto.randomUUID(),
-    idempotencyKey: auth.session.id,
+    idempotencyKey: auth.sessionId,
     loopGuard: ['worker.auth'],
     dataClassification: 'restricted',
-    actor: { type: 'user', id: auth.user.id },
-    payload: { sessionId: auth.session.id, userId: auth.user.id },
-  });
+    actor: { id: auth.user.id },
+    payload: { sessionId: auth.sessionId, userId: auth.user.id },
+  } as any);
 
   const cookieName = c.env.SESSION_COOKIE_NAME ?? 'community_os_session';
   setCookie(c, cookieName, auth.sessionToken, {
@@ -117,15 +117,15 @@ authRoutes.post('/login', async (c) => {
     sameSite: 'Lax',
     secure: true,
     path: '/',
-    expires: new Date(auth.session.expiresAt),
+    expires: new Date(auth.expiresAt),
   });
 
-  return c.json({ user: auth.user, session: auth.session });
+  return c.json({ user: auth.user, sessionId: auth.sessionId });
 });
 
 authRoutes.get('/session', requireAuth, (c) => {
   const auth = c.get('auth');
-  return c.json({ user: auth?.user ?? null, session: auth?.session ?? null });
+  return c.json({ user: auth?.user ?? null, sessionId: auth?.sessionId ?? null });
 });
 
 authRoutes.post('/logout', requireAuth, async (c) => {
@@ -141,7 +141,7 @@ authRoutes.post('/logout', requireAuth, async (c) => {
       category: 'auth',
       action: 'session.logout',
       targetType: 'session',
-      targetId: auth.session.id,
+      targetId: auth.sessionId,
       outcome: 'success',
       message: 'Session revoked.',
       metadata: {},
