@@ -134,21 +134,24 @@ export class IdentityService implements IdentityProvider {
       )
       .run();
 
+    const session = this.toSession(
+      {
+        id: sessionId,
+        user_id: userRow.id,
+        expires_at: expiresAt,
+        created_at: now.toISOString(),
+        last_seen_at: now.toISOString(),
+        ip_address: input.ipAddress ?? null,
+        user_agent: input.userAgent ?? null,
+      },
+      userRow.installation_id,
+    );
+
     return {
-      sessionToken,
-      session: this.toSession(
-        {
-          id: sessionId,
-          user_id: userRow.id,
-          expires_at: expiresAt,
-          created_at: now.toISOString(),
-          last_seen_at: now.toISOString(),
-          ip_address: input.ipAddress ?? null,
-          user_agent: input.userAgent ?? null,
-        },
-        userRow.installation_id,
-      ),
       user: this.toUser(userRow),
+      sessionToken,
+      sessionId: session.id,
+      expiresAt: session.expiresAt,
     };
   }
 
@@ -205,17 +208,6 @@ export class IdentityService implements IdentityProvider {
     await this.db.prepare('UPDATE sessions SET last_seen_at = ? WHERE id = ?').bind(lastSeenAt, record.session_id).run();
 
     return {
-      sessionToken,
-      session: {
-        id: record.session_id,
-        installationId: record.installation_id,
-        userId: record.user_id,
-        expiresAt: record.expires_at,
-        issuedAt: record.created_at,
-        lastSeenAt,
-        ipAddress: record.ip_address ?? undefined,
-        userAgent: record.user_agent ?? undefined,
-      },
       user: {
         id: record.id,
         installationId: record.user_installation_id,
@@ -228,6 +220,9 @@ export class IdentityService implements IdentityProvider {
         createdAt: record.user_created_at,
         updatedAt: record.user_updated_at,
       },
+      sessionToken,
+      sessionId: record.session_id,
+      expiresAt: record.expires_at,
     };
   }
 

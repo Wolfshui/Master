@@ -1,13 +1,6 @@
+export type AuditCategory = 'auth' | 'identity' | 'module' | 'system' | 'content' | 'workflow' | 'form';
 
-export type AuditCategory =
-  | 'auth'
-  | 'identity'
-  | 'module'
-  | 'permission'
-  | 'workflow'
-  | 'content'
-  | 'reporting'
-  | 'system';
+export type AuditOutcome = 'success' | 'failure' | 'warning';
 
 export interface AuditEntry {
   id: string;
@@ -17,8 +10,8 @@ export interface AuditEntry {
   action: string;
   targetType: string;
   targetId?: string;
-  outcome: 'success' | 'failure';
+  outcome: AuditOutcome;
   message: string;
-  metadata: Record<string, string | number | boolean | null>;
+  metadata: Record<string, unknown>;
   occurredAt: string;
 }

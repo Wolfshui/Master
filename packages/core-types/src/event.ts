@@ -1,6 +1,3 @@
-
-export type DataClassification = 'public' | 'internal' | 'restricted' | 'confidential';
-
 export const CORE_EVENT_NAMES = {
   USER_CREATED: 'identity.user.created.v1',
   SESSION_CREATED: 'identity.session.created.v1',
@@ -11,60 +8,50 @@ export const CORE_EVENT_NAMES = {
   WORKFLOW_TRANSITIONED: 'workflow.instance.transitioned.v1',
   CONTENT_PUBLISHED: 'content.item.published.v1',
   KB_ARTICLE_PUBLISHED: 'knowledge-base.article.published.v1',
-} as const;
+};
 
-export type CoreEventNames = (typeof CORE_EVENT_NAMES)[keyof typeof CORE_EVENT_NAMES];
-
-export interface EventActor {
-  type: 'user' | 'system' | 'module';
-  id: string;
-  ipAddress?: string;
-  userAgent?: string;
-}
-
-export interface EventEnvelope<
-  TName extends string = string,
-  TPayload extends Record<string, unknown> = Record<string, unknown>,
-> {
+export interface EventEnvelope<TName extends string = string, TPayload extends Record<string, unknown> = Record<string, unknown>> {
   id: string;
   name: TName;
   version: number;
   installationId: string;
-  source: string;
   subject: string;
+  source: string;
   occurredAt: string;
   traceId: string;
   idempotencyKey: string;
-  correlationId?: string;
-  causationId?: string;
-  hopCount?: number;
-  loopGuard: readonly string[];
-  dataClassification: DataClassification;
-  actor?: EventActor;
+  loopGuard: string[];
   payload: TPayload;
-  retry?: {
-    count: number;
-    max: number;
-    nextAttemptAt?: string;
-  };
+  dataClassification: 'public' | 'internal' | 'restricted' | 'confidential';
+  actor?: { id: string };
 }
 
-export interface EventValidationResult {
-  valid: boolean;
-  errors: readonly string[];
+export interface EventService {
+  publish<TPayload extends Record<string, unknown>>(event: EventEnvelope<string, TPayload>): Promise<void>;
+  publishBatch(events: readonly EventEnvelope[]): Promise<void>;
+}
+
+export interface QueueService<T = unknown> {
+  send(message: T): Promise<void>;
+  sendBatch(messages: readonly T[]): Promise<void>;
 }
 
 const versionedEventPattern = /^[a-z0-9.-]+\.v[0-9]+$/;
+
+interface ValidationResult {
+  valid: boolean;
+  errors: string[];
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function isIsoDate(value: string): boolean {
-  return !Number.isNaN(Date.parse(value));
+function isIsoDate(value: unknown): boolean {
+  return typeof value === 'string' && !Number.isNaN(Date.parse(value));
 }
 
-export function validateEventEnvelope(candidate: unknown): EventValidationResult {
+export function validateEventEnvelope(candidate: unknown): ValidationResult {
   const errors: string[] = [];
 
   if (!isRecord(candidate)) {
@@ -90,7 +77,7 @@ export function validateEventEnvelope(candidate: unknown): EventValidationResult
     errors.push('occurredAt must be an ISO-8601 timestamp.');
   }
 
-  if (!Array.isArray(candidate.loopGuard) || candidate.loopGuard.some((value) => typeof value !== 'string')) {
+  if (!Array.isArray(candidate.loopGuard) || !candidate.loopGuard.every((value) => typeof value === 'string')) {
     errors.push('loopGuard must be an array of strings.');
   }
 
@@ -98,8 +85,8 @@ export function validateEventEnvelope(candidate: unknown): EventValidationResult
     errors.push('payload must be an object.');
   }
 
-  const classifications: readonly DataClassification[] = ['public', 'internal', 'restricted', 'confidential'];
-  if (!classifications.includes(candidate.dataClassification as DataClassification)) {
+  const classifications = ['public', 'internal', 'restricted', 'confidential'];
+  if (typeof candidate.dataClassification !== 'string' || !classifications.includes(candidate.dataClassification)) {
     errors.push('dataClassification must be one of public, internal, restricted, or confidential.');
   }
 
@@ -113,7 +100,7 @@ export function validateEventEnvelope(candidate: unknown): EventValidationResult
   };
 }
 
-export function assertEventEnvelope(candidate: unknown): asserts candidate is EventEnvelope {
+export function assertEventEnvelope(candidate: unknown): asserts candidate {
   const result = validateEventEnvelope(candidate);
   if (!result.valid) {
     throw new Error(result.errors.join(' '));

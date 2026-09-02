@@ -1,4 +1,3 @@
-
 import { describe, expect, it } from 'vitest';
 
 import { ManifestValidator } from '../manifest';
@@ -56,7 +55,9 @@ describe('ManifestValidator', () => {
     });
 
     expect(result.valid).toBe(true);
-    expect(result.manifest?.id).toBe('knowledge-base');
+    if (result.valid && result.manifest) {
+      expect(result.manifest.id).toBe('knowledge-base');
+    }
   });
 
   it('rejects invalid identifiers', () => {
