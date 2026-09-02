@@ -10,7 +10,7 @@ database_id = "0c84245f-34c2-448b-9385-0370d617113b"
 
 [[kv_namespaces]]
 binding = "PLATFORM_CACHE"
-id = "community-platform-os-cache"
+id = "fb6c8c17421149068ef1c2afda5cc40e"
 
 [[queues.producers]]
 binding = "EVENT_QUEUE"
