@@ -7,7 +7,6 @@ import type { Context } from 'hono';
 import type { AppEnv } from '../index';
 import { requireAuth } from '../middleware/auth';
 import { AuditService } from '../services/audit';
-import { EventBus } from '../services/event-bus';
 import { IdentityService } from '../services/identity';
 
 const authRoutes = new Hono<AppEnv>();
@@ -59,7 +58,6 @@ authRoutes.post('/login', async (c) => {
   const body = await c.req.json<{ email: string; password: string }>();
   const identity = new IdentityService(c.env.DB);
   const audit = new AuditService(c.env.DB, installationId(c));
-//   const events = new EventBus(c.env.DB, c.env.EVENT_QUEUE);
   const loginInput = {
     installationId: installationId(c),
     email: body.email,
@@ -94,22 +92,6 @@ authRoutes.post('/login', async (c) => {
     message: 'Session created.',
     metadata: { email: auth.user.email },
   });
-
-  await events.publish({
-    id: crypto.randomUUID(),
-    name: 'identity.session.created.v1',
-    version: 1,
-    installationId: auth.user.installationId,
-    source: 'worker.auth',
-    subject: `session:${auth.sessionId}`,
-    occurredAt: new Date().toISOString(),
-    traceId: crypto.randomUUID(),
-    idempotencyKey: auth.sessionId,
-    loopGuard: ['worker.auth'],
-    dataClassification: 'restricted',
-    actor: { id: auth.user.id },
-    payload: { sessionId: auth.sessionId, userId: auth.user.id },
-  } as any);
 
   const cookieName = c.env.SESSION_COOKIE_NAME ?? 'community_os_session';
   setCookie(c, cookieName, auth.sessionToken, {

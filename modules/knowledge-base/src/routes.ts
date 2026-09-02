@@ -1,10 +1,8 @@
 /* eslint-disable */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 
 import type { Context } from 'hono';
 import { Hono } from 'hono';
 import type { AuthenticatedSession } from '@community-os/core-types';
-import { knowledgeBaseEventNames } from './events';
 import { ArticleService } from './services/article.service';
 
 interface KnowledgeBaseContext {
@@ -62,12 +60,6 @@ export function createKnowledgeBaseRoutes<E extends { Variables: KnowledgeBaseCo
       createdBy: (auth as any).user.id,
       updatedBy: (auth as any).user.id,
     });
-    const eventQueue = (c.env as any).EVENT_QUEUE;
-    await eventQueue.send({
-      eventName: knowledgeBaseEventNames.articleCreated,
-      articleId: article.id,
-      installationId: article.installationId,
-    });
     return c.json({ article }, 201);
   });
   
@@ -95,12 +87,6 @@ export function createKnowledgeBaseRoutes<E extends { Variables: KnowledgeBaseCo
     if (!article) {
       return c.json({ error: 'Article not found.' }, 404);
     }
-    const eventQueue = (c.env as any).EVENT_QUEUE;
-    await eventQueue.send({
-      eventName: knowledgeBaseEventNames.articleUpdated,
-      articleId: article.id,
-      installationId: article.installationId,
-    });
     return c.json({ article });
   });
   
@@ -115,15 +101,8 @@ export function createKnowledgeBaseRoutes<E extends { Variables: KnowledgeBaseCo
     if (!removed) {
       return c.json({ error: 'Article not found.' }, 404);
     }
-    const eventQueue = (c.env as any).EVENT_QUEUE;
-    await eventQueue.send({
-      eventName: knowledgeBaseEventNames.articleDeleted,
-      articleId: c.req.param('id'),
-      installationId,
-      actorId: (auth as any).user.id,
-    });
     return c.json({ success: true });
   });
-  
+
   return knowledgeBaseRoutes;
 }

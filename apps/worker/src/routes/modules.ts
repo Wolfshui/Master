@@ -9,7 +9,6 @@ import { ManifestValidator } from '@community-os/module-sdk';
 import type { AppEnv } from '../index';
 import { requireOwner } from '../middleware/auth';
 import { AuditService } from '../services/audit';
-import { EventBus } from '../services/event-bus';
 
 export const moduleRoutes = new Hono<AppEnv>();
 
@@ -75,23 +74,6 @@ moduleRoutes.post('/install', requireOwner, async (c) => {
     outcome: 'success',
     message: `Installed module ${manifest.name}.`,
     metadata: { version: manifest.version },
-  });
-
-//   const events = new EventBus(c.env.DB, c.env.EVENT_QUEUE);
-  await events.publish({
-    id: crypto.randomUUID(),
-    name: 'module.installed.v1',
-    version: 1,
-    installationId: installationId(c),
-    source: 'worker.modules',
-    subject: `module:${manifest.id}`,
-    occurredAt: now,
-    traceId: crypto.randomUUID(),
-    idempotencyKey: `${manifest.id}:${manifest.version}`,
-    loopGuard: ['worker.modules'],
-    dataClassification: 'internal',
-    ...(auth ? { actor: { id: auth.user.id } } : {}),
-    payload: { moduleId: manifest.id as string, version: manifest.version as string },
   });
 
   return c.json({ module: manifest }, 201);
