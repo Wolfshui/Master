@@ -2,7 +2,7 @@
 import type { EventEnvelope, EventService, QueueService } from '@community-os/core-types';
 import { validateEventEnvelope } from '@community-os/core-types';
 
-import type { D1Database, QueueBinding } from '../types';
+import type { D1Database } from '../types';
 
 export class EventBus implements EventService, QueueService<EventEnvelope> {
   public constructor(

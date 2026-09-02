@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Miniflare } from 'miniflare';
 
 import { app } from '../index';
-import type { D1Database, EnvBindings, KVNamespace, QueueBinding } from '../types';
+import type { D1Database, EnvBindings, KVNamespace } from '../types';
 
 const schema = `
 CREATE TABLE users (
@@ -91,16 +91,6 @@ CREATE TABLE kb_articles (
 );
 `;
 
-function createQueueStub(): QueueBinding<Record<string, unknown>> {
-  return {
-    send(): Promise<void> {
-      return Promise.resolve();
-    },
-    sendBatch(): Promise<void> {
-      return Promise.resolve();
-    },
-  };
-}
 
 
 function createKvStub(): KVNamespace {
