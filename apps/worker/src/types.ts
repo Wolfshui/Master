@@ -22,16 +22,6 @@ export interface D1Database {
   exec(query: string): Promise<unknown>;
 }
 
-export interface R2ObjectBody {
-  arrayBuffer(): Promise<ArrayBuffer>;
-}
-
-export interface R2Bucket {
-  put(key: string, value: ArrayBuffer | ReadableStream | string): Promise<void>;
-  get(key: string): Promise<R2ObjectBody | null>;
-  delete(key: string): Promise<void>;
-}
-
 export interface KVNamespace {
   get(key: string): Promise<string | null>;
   put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
@@ -45,7 +35,6 @@ export interface QueueBinding<TMessage> {
 
 export interface EnvBindings {
   DB: D1Database;
-  MODULE_ASSETS: R2Bucket;
   PLATFORM_CACHE: KVNamespace;
   EVENT_QUEUE: QueueBinding<Record<string, unknown>>;
   INSTALLATION_ID?: string;

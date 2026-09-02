@@ -6,11 +6,7 @@ compatibility_date = "2026-08-31"
 [[d1_databases]]
 binding = "DB"
 database_name = "community_platform_os"
-database_id = "local-community-platform-os"
-
-[[r2_buckets]]
-binding = "MODULE_ASSETS"
-bucket_name = "community-platform-os-assets"
+database_id = "0c84245f-34c2-448b-9385-0370d617113b"
 
 [[kv_namespaces]]
 binding = "PLATFORM_CACHE"

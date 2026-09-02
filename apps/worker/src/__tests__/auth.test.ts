@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { Miniflare } from 'miniflare';
 
 import { app } from '../index';
-import type { D1Database, EnvBindings, KVNamespace, QueueBinding, R2Bucket } from '../types';
+import type { D1Database, EnvBindings, KVNamespace, QueueBinding } from '../types';
 
 const schema = `
 CREATE TABLE users (
@@ -102,19 +102,6 @@ function createQueueStub(): QueueBinding<Record<string, unknown>> {
   };
 }
 
-function createBucketStub(): R2Bucket {
-  return {
-    put(): Promise<void> {
-      return Promise.resolve();
-    },
-    get(): Promise<null> {
-      return Promise.resolve(null);
-    },
-    delete(): Promise<void> {
-      return Promise.resolve();
-    },
-  };
-}
 
 function createKvStub(): KVNamespace {
   const data = new Map<string, string>();
@@ -155,7 +142,6 @@ describe('auth routes', () => {
 
     env = {
       DB: db,
-      MODULE_ASSETS: createBucketStub(),
       PLATFORM_CACHE: createKvStub(),
       EVENT_QUEUE: createQueueStub(),
       INSTALLATION_ID: 'test-installation',
