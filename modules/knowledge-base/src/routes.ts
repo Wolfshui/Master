@@ -12,7 +12,7 @@ interface KnowledgeBaseContext {
   };
 }
 
-export function createKnowledgeBaseRoutes<E extends KnowledgeBaseContext = KnowledgeBaseContext>() {
+export function createKnowledgeBaseRoutes<E = unknown>() {
   const knowledgeBaseRoutes = new Hono<E>();
 
   knowledgeBaseRoutes.get('/kb/articles', async (c: Context<E>) => {

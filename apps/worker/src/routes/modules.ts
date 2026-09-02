@@ -91,7 +91,7 @@ moduleRoutes.post('/install', requireOwner, async (c) => {
     loopGuard: ['worker.modules'],
     dataClassification: 'internal',
     ...(auth ? { actor: { id: auth.user.id } } : {}),
-    payload: { moduleId: manifest.id, version: manifest.version },
+    payload: { moduleId: manifest.id as string, version: manifest.version as string },
   });
 
   return c.json({ module: manifest }, 201);

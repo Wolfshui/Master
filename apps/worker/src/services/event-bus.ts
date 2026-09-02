@@ -47,11 +47,11 @@ export class EventBus implements EventService, QueueService<EventEnvelope> {
     }
   }
 
-  public async enqueue(message: EventEnvelope): Promise<void> {
+  public async send(message: EventEnvelope): Promise<void> {
     await this.queue.send(message as unknown as Record<string, unknown>);
   }
 
-  public async enqueueBatch(messages: readonly EventEnvelope[]): Promise<void> {
+  public async sendBatch(messages: readonly EventEnvelope[]): Promise<void> {
     await this.queue.sendBatch(messages as unknown as readonly Record<string, unknown>[]);
   }
 }
