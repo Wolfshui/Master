@@ -77,7 +77,7 @@ moduleRoutes.post('/install', requireOwner, async (c) => {
     metadata: { version: manifest.version },
   });
 
-  const events = new EventBus(c.env.DB, c.env.EVENT_QUEUE);
+//   const events = new EventBus(c.env.DB, c.env.EVENT_QUEUE);
   await events.publish({
     id: crypto.randomUUID(),
     name: 'module.installed.v1',

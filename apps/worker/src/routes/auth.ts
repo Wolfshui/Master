@@ -59,7 +59,7 @@ authRoutes.post('/login', async (c) => {
   const body = await c.req.json<{ email: string; password: string }>();
   const identity = new IdentityService(c.env.DB);
   const audit = new AuditService(c.env.DB, installationId(c));
-  const events = new EventBus(c.env.DB, c.env.EVENT_QUEUE);
+//   const events = new EventBus(c.env.DB, c.env.EVENT_QUEUE);
   const loginInput = {
     installationId: installationId(c),
     email: body.email,

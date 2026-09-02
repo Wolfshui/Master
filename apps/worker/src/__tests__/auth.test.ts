@@ -143,7 +143,6 @@ describe('auth routes', () => {
     env = {
       DB: db,
       PLATFORM_CACHE: createKvStub(),
-      EVENT_QUEUE: createQueueStub(),
       INSTALLATION_ID: 'test-installation',
       SESSION_COOKIE_NAME: 'community_os_session',
     };
