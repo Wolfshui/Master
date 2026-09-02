@@ -1,5 +1,4 @@
-
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined ?? '').replace(/\/$/, '');
 
 export class ApiError extends Error {
   constructor(
@@ -36,15 +35,15 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  get: <T>(path: string, init?: Omit<RequestInit, 'method'>) =>
+  get: <T,>(path: string, init?: Omit<RequestInit, 'method'>) =>
     request<T>(path, { ...init, method: 'GET' }),
 
-  post: <T>(path: string, body: unknown, init?: Omit<RequestInit, 'method' | 'body'>) =>
+  post: <T,>(path: string, body: unknown, init?: Omit<RequestInit, 'method' | 'body'>) =>
     request<T>(path, { ...init, method: 'POST', body: JSON.stringify(body) }),
 
-  put: <T>(path: string, body: unknown, init?: Omit<RequestInit, 'method' | 'body'>) =>
+  put: <T,>(path: string, body: unknown, init?: Omit<RequestInit, 'method' | 'body'>) =>
     request<T>(path, { ...init, method: 'PUT', body: JSON.stringify(body) }),
 
-  delete: <T>(path: string, init?: Omit<RequestInit, 'method'>) =>
+  delete: <T,>(path: string, init?: Omit<RequestInit, 'method'>) =>
     request<T>(path, { ...init, method: 'DELETE' }),
 };

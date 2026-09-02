@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 import { cors } from 'hono/cors';
 

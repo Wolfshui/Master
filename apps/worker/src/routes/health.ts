@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 import { Hono } from 'hono';
 

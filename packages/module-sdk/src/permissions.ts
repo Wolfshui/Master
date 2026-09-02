@@ -1,28 +1,29 @@
-
-import type { ModulePermissionDeclaration } from '@community-os/core-types';
+interface Permission {
+  key: string;
+  [key: string]: unknown;
+}
 
 export class PermissionRegistry {
-  private readonly permissions = new Map<string, ModulePermissionDeclaration>();
+  private permissions = new Map<string, Permission>();
 
-  public register(permission: ModulePermissionDeclaration): void {
+  register(permission: Permission): void {
     if (this.permissions.has(permission.key)) {
       throw new Error(`Permission already registered: ${permission.key}`);
     }
-
     this.permissions.set(permission.key, permission);
   }
 
-  public registerMany(permissions: readonly ModulePermissionDeclaration[]): void {
+  registerMany(permissions: Permission[]): void {
     for (const permission of permissions) {
       this.register(permission);
     }
   }
 
-  public has(permissionKey: string): boolean {
+  has(permissionKey: string): boolean {
     return this.permissions.has(permissionKey);
   }
 
-  public list(): readonly ModulePermissionDeclaration[] {
+  list(): Permission[] {
     return Array.from(this.permissions.values());
   }
 }

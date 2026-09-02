@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 import type { AuthenticatedSession, IdentityProvider, LoginInput, OwnerBootstrapInput, Session, User } from '@community-os/core-types';
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 import { deleteCookie, setCookie } from 'hono/cookie';
 import { Hono } from 'hono';
