@@ -3,16 +3,17 @@
 
 import type { Context } from 'hono';
 import { Hono } from 'hono';
+import type { AuthenticatedSession } from '@community-os/core-types';
 import { knowledgeBaseEventNames } from './events';
 import { ArticleService } from './services/article.service';
 
 interface KnowledgeBaseContext {
   Variables: {
-    auth: Record<string, unknown> | null;
+    auth: AuthenticatedSession | null;
   };
 }
 
-export function createKnowledgeBaseRoutes<E = unknown>() {
+export function createKnowledgeBaseRoutes<E extends { Variables: KnowledgeBaseContext['Variables'] } = { Variables: KnowledgeBaseContext['Variables'] }>() {
   const knowledgeBaseRoutes = new Hono<E>();
 
   knowledgeBaseRoutes.get('/kb/articles', async (c: Context<E>) => {

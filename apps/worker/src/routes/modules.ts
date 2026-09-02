@@ -71,7 +71,7 @@ moduleRoutes.post('/install', requireOwner, async (c) => {
     category: 'module',
     action: 'module.install',
     targetType: 'module',
-    targetId: manifest.id,
+    targetId: manifest.id as string,
     outcome: 'success',
     message: `Installed module ${manifest.name}.`,
     metadata: { version: manifest.version },
