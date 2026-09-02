@@ -1,6 +1,6 @@
 /* eslint-disable */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-argument */
-import type { D1Database } from '@community-os/worker';
+import type { D1Database } from '@community-os/core-types';
 
 interface KbArticleRow {
   id: string;
@@ -65,7 +65,7 @@ export class ArticleService {
       )
       .bind(this.installationId)
       .all<KbArticleRow>();
-    return rows.results.map((row) => this.toRecord(row));
+    return rows.results.map((row: KbArticleRow) => this.toRecord(row));
   }
 
   async getById(id: string): Promise<KbArticle | null> {

@@ -1,5 +1,5 @@
 export class ModuleLifecycleHandler {
-    async validate(_context) { }
-    async deactivate(_context) { }
-    async purge(_context) { }
+    async validate(_context: any) { }
+    async deactivate(_context: any) { }
+    async purge(_context: any) { }
 }

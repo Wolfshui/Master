@@ -1,4 +1,3 @@
-/* eslint-disable */
 
 import type { AuditCategory, AuditEntry } from '@community-os/core-types';
 

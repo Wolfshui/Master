@@ -4,30 +4,30 @@ import { knowledgeBasePermissions } from './permissions';
 import { createKnowledgeBaseRoutes } from './routes';
 export class KnowledgeBaseModule extends ModuleLifecycleHandler {
     manifest = manifest;
-    validate(_context) {
+    validate(_context: any) {
         const permissions = new PermissionRegistry();
         permissions.registerMany(knowledgeBasePermissions);
         return Promise.resolve();
     }
-    install(_context) {
+    install(_context: any) {
         return Promise.resolve();
     }
-    activate(_context) {
+    activate(_context: any) {
         return Promise.resolve();
     }
-    deactivate(_context) {
+    deactivate(_context: any) {
         return Promise.resolve();
     }
-    update(_context, _previousVersion) {
+    update(_context: any, _previousVersion: any) {
         return Promise.resolve();
     }
-    rollback(_context, _failedVersion) {
+    rollback(_context: any, _failedVersion: any) {
         return Promise.resolve();
     }
-    uninstall(_context) {
+    uninstall(_context: any) {
         return Promise.resolve();
     }
-    purge(_context) {
+    purge(_context: any) {
         return Promise.resolve();
     }
 }

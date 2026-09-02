@@ -1,4 +1,3 @@
-/* eslint-disable */
 
 import type { EventEnvelope, EventService, QueueService } from '@community-os/core-types';
 import { validateEventEnvelope } from '@community-os/core-types';

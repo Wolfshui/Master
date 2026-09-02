@@ -32,10 +32,30 @@ export interface D1Database {
 export interface User {
   id: string;
   email: string;
-  name: string;
+  displayName: string;
+  installationId: string;
+  status: string;
+  isOwner: boolean;
+  roleIds: string[];
+  permissionKeys: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Session {
+  id: string;
+  installationId: string;
+  userId: string;
+  expiresAt: string;
+  issuedAt: string;
+  lastSeenAt: string;
+  ipAddress?: string | undefined;
+  userAgent?: string | undefined;
 }
 
 export interface AuthenticatedSession {
   user: User;
   sessionToken: string;
+  sessionId: string;
+  expiresAt: string;
 }

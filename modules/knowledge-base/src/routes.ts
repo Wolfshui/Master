@@ -6,9 +6,15 @@ import { Hono } from 'hono';
 import { knowledgeBaseEventNames } from './events';
 import { ArticleService } from './services/article.service';
 
-export function createKnowledgeBaseRoutes<E = unknown>() {
+interface KnowledgeBaseContext {
+  Variables: {
+    auth: Record<string, unknown> | null;
+  };
+}
+
+export function createKnowledgeBaseRoutes<E extends KnowledgeBaseContext = KnowledgeBaseContext>() {
   const knowledgeBaseRoutes = new Hono<E>();
-  
+
   knowledgeBaseRoutes.get('/kb/articles', async (c: Context<E>) => {
     const auth = c.get('auth');
     if (!auth) {
@@ -84,7 +90,7 @@ export function createKnowledgeBaseRoutes<E = unknown>() {
     if (body.discoverable !== undefined) updateInput.discoverable = body.discoverable;
     updateInput.updatedBy = (auth as any).user.id;
     
-    const article = await articleService.update(c.req.param('id'), updateInput);
+    const article = await articleService.update(c.req.param('id'), updateInput as any);
     if (!article) {
       return c.json({ error: 'Article not found.' }, 404);
     }

@@ -10,6 +10,32 @@ export const CORE_EVENT_NAMES = {
   KB_ARTICLE_PUBLISHED: 'knowledge-base.article.published.v1',
 };
 
+export interface EventEnvelope<TName extends string = string, TPayload extends Record<string, unknown> = Record<string, unknown>> {
+  id: string;
+  name: TName;
+  version: number;
+  installationId: string;
+  subject: string;
+  source: string;
+  occurredAt: string;
+  traceId: string;
+  idempotencyKey: string;
+  loopGuard: string[];
+  payload: TPayload;
+  dataClassification: 'public' | 'internal' | 'restricted' | 'confidential';
+  actor?: { id: string };
+}
+
+export interface EventService {
+  publish<TPayload extends Record<string, unknown>>(event: EventEnvelope<string, TPayload>): Promise<void>;
+  publishBatch(events: readonly EventEnvelope[]): Promise<void>;
+}
+
+export interface QueueService<T = unknown> {
+  send(message: T): Promise<void>;
+  sendBatch(messages: readonly T[]): Promise<void>;
+}
+
 const versionedEventPattern = /^[a-z0-9.-]+\.v[0-9]+$/;
 
 interface ValidationResult {
